@@ -52,7 +52,7 @@ export const commentRouter = router({
           ? db.query.commentLikesTable.findFirst({
               where: and(
                 eq(commentLikesTable.commentId, comment.id),
-                eq(commentLikesTable.userId, ctx.user.id),
+                eq(commentLikesTable.userId, userId),
               ),
             })
           : Promise.resolve(null),
@@ -78,7 +78,7 @@ export const commentRouter = router({
       }));
     }),
 
-  add: protectedProcedure
+  add: publicProcedure
     .input(
       z.object({
         experienceId: experienceSelectSchema.shape.id,
@@ -87,6 +87,8 @@ export const commentRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const now = new Date().toISOString();
+      // TODO: Remove this once we have a real user
+      const userId = 1;
 
       const experience = await db.query.experiencesTable.findFirst({
         where: eq(experiencesTable.id, input.experienceId),
@@ -104,18 +106,18 @@ export const commentRouter = router({
         .values({
           experienceId: input.experienceId,
           content: input.content,
-          userId: ctx.user.id,
+          userId: userId,
           createdAt: now,
           updatedAt: now,
         })
         .returning();
 
-      if (experience.userId !== ctx.user.id) {
+      if (experience.userId !== userId) {
         await db.insert(notificationsTable).values({
           type: "user_commented_experience",
           commentId: comment[0].id,
           experienceId: input.experienceId,
-          fromUserId: ctx.user.id,
+          fromUserId: userId,
           userId: experience.userId,
           createdAt: now,
         });
@@ -143,7 +145,7 @@ export const commentRouter = router({
         });
       }
 
-      if (comment.userId !== ctx.user.id) {
+      if (comment.userId !== userId) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You can only edit your own comments",
@@ -182,10 +184,7 @@ export const commentRouter = router({
         where: eq(experiencesTable.id, comment.experienceId),
       });
 
-      if (
-        comment.userId !== ctx.user.id &&
-        experience?.userId !== ctx.user.id
-      ) {
+      if (comment.userId !== userId && experience?.userId !== userId) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You can only delete your own comments",
@@ -203,7 +202,7 @@ export const commentRouter = router({
       const existingLike = await db.query.commentLikesTable.findFirst({
         where: and(
           eq(commentLikesTable.commentId, input.id),
-          eq(commentLikesTable.userId, ctx.user.id),
+          eq(commentLikesTable.userId, userId),
         ),
       });
 
@@ -216,7 +215,7 @@ export const commentRouter = router({
 
       await db.insert(commentLikesTable).values({
         commentId: input.id,
-        userId: ctx.user.id,
+        userId: userId,
         createdAt: new Date().toISOString(),
       });
 
@@ -231,7 +230,7 @@ export const commentRouter = router({
         .where(
           and(
             eq(commentLikesTable.commentId, input.id),
-            eq(commentLikesTable.userId, ctx.user.id),
+            eq(commentLikesTable.userId, userId),
           ),
         );
 
