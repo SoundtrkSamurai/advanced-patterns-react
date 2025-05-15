@@ -29,12 +29,12 @@ export function App() {
           <Toaster />
           <div className="flex justify-center gap-8 pb-8">
             <Navbar />
-            <div className="w-full max-w-2xl min-h-screen">
-              <header className="p-4 mb-4 border-b border-neutral-200 dark:border-neutral-800">
-                <h1 className="text-xl font-bold text-center">
+            <div className="min-h-screen w-full max-w-2xl">
+              <header className="mb-4 border-b border-neutral-200 p-4 dark:border-neutral-800">
+                <h1 className="text-center text-xl font-bold">
                   Advanced Patterns React
                 </h1>
-                <p className="text-sm text-center text-neutral-500">
+                <p className="text-center text-sm text-neutral-500">
                   <b>
                     <span className="dark:text-primary-500">Cosden</span>{" "}
                     Solutions
@@ -59,10 +59,7 @@ function Index() {
   );
 
   return (
-    <InfiniteScroll
-      hasNextPage={!!experiencesQuery.data?.pages[0].nextCursor}
-      onLoadMore={experiencesQuery.fetchNextPage}
-    >
+    <InfiniteScroll onLoadMore={experiencesQuery.fetchNextPage}>
       <ExperienceList
         experiences={
           flatMap(experiencesQuery.data?.pages, (page) => page.experiences) ??
