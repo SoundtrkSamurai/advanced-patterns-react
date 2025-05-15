@@ -7,6 +7,8 @@ import { httpBatchLink } from "@trpc/react-query";
 import { env } from "./lib/utils/env";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ExperienceList } from "./features/experiences/components/ExperienceList";
+import { InfiniteScroll } from "./features/shared/components/InfiniteScroll";
+import { flatMap } from "lodash";
 
 export function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -27,12 +29,12 @@ export function App() {
           <Toaster />
           <div className="flex justify-center gap-8 pb-8">
             <Navbar />
-            <div className="min-h-screen w-full max-w-2xl">
-              <header className="mb-4 border-b border-neutral-200 p-4 dark:border-neutral-800">
-                <h1 className="text-center text-xl font-bold">
+            <div className="w-full max-w-2xl min-h-screen">
+              <header className="p-4 mb-4 border-b border-neutral-200 dark:border-neutral-800">
+                <h1 className="text-xl font-bold text-center">
                   Advanced Patterns React
                 </h1>
-                <p className="text-center text-sm text-neutral-500">
+                <p className="text-sm text-center text-neutral-500">
                   <b>
                     <span className="dark:text-primary-500">Cosden</span>{" "}
                     Solutions
@@ -49,12 +51,27 @@ export function App() {
 }
 
 function Index() {
-  const experiencesQuery = trpc.experiences.feed.useQuery({});
+  const experiencesQuery = trpc.experiences.feed.useInfiniteQuery(
+    {},
+    {
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    },
+  );
 
   return (
-    <ExperienceList
-      experiences={experiencesQuery.data?.experiences ?? []}
-      isLoading={experiencesQuery.isLoading}
-    />
+    <InfiniteScroll
+      hasNextPage={!!experiencesQuery.data?.pages[0].nextCursor}
+      onLoadMore={experiencesQuery.fetchNextPage}
+    >
+      <ExperienceList
+        experiences={
+          flatMap(experiencesQuery.data?.pages, (page) => page.experiences) ??
+          []
+        }
+        isLoading={
+          experiencesQuery.isLoading || experiencesQuery.isFetchingNextPage
+        }
+      />
+    </InfiniteScroll>
   );
 }
