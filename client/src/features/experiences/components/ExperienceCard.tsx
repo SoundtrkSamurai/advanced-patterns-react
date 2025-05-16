@@ -1,7 +1,9 @@
-import Card from "@/features/shared/components/ui/Card";
-import { ExperienceForList } from "../types";
 import { LinkIcon, MessageSquare } from "lucide-react";
+
 import { CommentsSection } from "@/features/comments/components/CommentsSection";
+import Card from "@/features/shared/components/ui/Card";
+
+import { ExperienceForList } from "../types";
 
 type ExperienceCardProps = {
   experience: ExperienceForList;

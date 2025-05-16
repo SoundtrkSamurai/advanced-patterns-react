@@ -1,6 +1,8 @@
-import Spinner from "@/features/shared/components/ui/Spinner";
-import { ExperienceForList } from "../types";
 import { map } from "lodash";
+
+import Spinner from "@/features/shared/components/ui/Spinner";
+
+import { ExperienceForList } from "../types";
 import { ExperienceCard } from "./ExperienceCard";
 
 type ExperienceListProps = {

@@ -1,7 +1,9 @@
-import { trpc } from "@/trpc";
 import { Experience } from "@advanced-react/server/database/schema";
-import CommentList from "./CommentList";
+
+import { trpc } from "@/trpc";
+
 import { CommentCreateForm } from "./CommentCreateForm";
+import CommentList from "./CommentList";
 
 type CommentsSectionProps = {
   commentsCount: number;

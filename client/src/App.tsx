@@ -1,14 +1,15 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/react-query";
+import { flatMap } from "lodash";
 import { useState } from "react";
+
+import { ExperienceList } from "./features/experiences/components/ExperienceList";
+import { InfiniteScroll } from "./features/shared/components/InfiniteScroll";
 import Navbar from "./features/shared/components/Navbar";
 import { Toaster } from "./features/shared/components/ui/Toaster";
 import { ThemeProvider } from "./features/shared/context/ThemeProvider";
-import { trpc } from "./trpc";
-import { httpBatchLink } from "@trpc/react-query";
 import { env } from "./lib/utils/env";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ExperienceList } from "./features/experiences/components/ExperienceList";
-import { InfiniteScroll } from "./features/shared/components/InfiniteScroll";
-import { flatMap } from "lodash";
+import { trpc } from "./trpc";
 
 export function App() {
   const [queryClient] = useState(() => new QueryClient());

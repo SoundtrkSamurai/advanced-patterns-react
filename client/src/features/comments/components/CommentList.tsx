@@ -1,5 +1,7 @@
-import Spinner from "@/features/shared/components/ui/Spinner";
 import { map } from "lodash";
+
+import Spinner from "@/features/shared/components/ui/Spinner";
+
 import { CommentForList } from "../types";
 import { CommentCard } from "./CommentCard";
 
