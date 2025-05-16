@@ -1,22 +1,20 @@
-import {
-  commentLikesRelations,
-  Experience,
-} from "@advanced-react/server/database/schema";
-import { z } from "zod";
+import { Experience } from "@advanced-react/server/database/schema";
 import { commentValidationSchema } from "@advanced-react/shared/schema/comment";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/features/shared/components/ui/Button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
 } from "@/features/shared/components/ui/Form";
-import { TextArea } from "@/features/shared/components/ui/TextArea";
-import { Button } from "@/features/shared/components/ui/Button";
-import { trpc } from "@/trpc";
-import { useToast } from "@/features/shared/hooks/useToast";
 import Spinner from "@/features/shared/components/ui/Spinner";
+import { TextArea } from "@/features/shared/components/ui/TextArea";
+import { useToast } from "@/features/shared/hooks/useToast";
+import { trpc } from "@/trpc";
 
 type CommentCreateFormData = z.infer<typeof commentValidationSchema>;
 
@@ -27,6 +25,7 @@ type CommentCreateFormProps = {
 export function CommentCreateForm({ experienceId }: CommentCreateFormProps) {
   const { toast } = useToast();
   const utils = trpc.useUtils();
+
   const form = useForm<CommentCreateFormData>({
     resolver: zodResolver(commentValidationSchema),
     defaultValues: {
