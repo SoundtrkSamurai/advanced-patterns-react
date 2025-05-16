@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint \"**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"**/*.{ts,tsx}\" --fix",
-    "format": "prettier --write ."
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "zod": "^3.23.8",

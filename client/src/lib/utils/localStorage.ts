@@ -1,18 +1,21 @@
 export function getItem<T>(key: string): T | null {
   try {
-      const item = localStorage.getItem(key);
-      return item ? (JSON.parse(item) as T) : null;
-    } catch (error) {
-      console.error(`Error parsing JSON from localStorage key "${key}":`, error);
-      return null;
-    }
+    const item = localStorage.getItem(key);
+    return item ? (JSON.parse(item) as T) : null;
+  } catch (error) {
+    console.error(`Error parsing JSON from localStorage key "${key}":`, error);
+    return null;
+  }
 }
 export function setItem<T>(key: string, value: T): void {
   try {
     const item = JSON.stringify(value);
     localStorage.setItem(key, item);
   } catch (error) {
-    console.error(`Error stringifying value for localStorage key "${key}":`, error);
+    console.error(
+      `Error stringifying value for localStorage key "${key}":`,
+      error,
+    );
   }
 }
 
