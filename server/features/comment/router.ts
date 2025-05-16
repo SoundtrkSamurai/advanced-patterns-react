@@ -52,7 +52,7 @@ export const commentRouter = router({
           ? db.query.commentLikesTable.findFirst({
               where: and(
                 eq(commentLikesTable.commentId, comment.id),
-                eq(commentLikesTable.userId, userId),
+                eq(commentLikesTable.userId, ctx.user.id),
               ),
             })
           : Promise.resolve(null),
@@ -89,7 +89,6 @@ export const commentRouter = router({
       const now = new Date().toISOString();
       // TODO: Remove this once we have a real user
       const userId = 1;
-
       const experience = await db.query.experiencesTable.findFirst({
         where: eq(experiencesTable.id, input.experienceId),
       });
@@ -106,7 +105,7 @@ export const commentRouter = router({
         .values({
           experienceId: input.experienceId,
           content: input.content,
-          userId: userId,
+          userId,
           createdAt: now,
           updatedAt: now,
         })
@@ -126,7 +125,7 @@ export const commentRouter = router({
       return comment[0];
     }),
 
-  edit: protectedProcedure
+  edit: publicProcedure
     .input(
       z.object({
         id: commentSelectSchema.shape.id,
@@ -134,6 +133,8 @@ export const commentRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // TODO: Remove this once we have a real user
+      const userId = 1;
       const comment = await db.query.commentsTable.findFirst({
         where: eq(commentsTable.id, input.id),
       });
@@ -184,7 +185,10 @@ export const commentRouter = router({
         where: eq(experiencesTable.id, comment.experienceId),
       });
 
-      if (comment.userId !== userId && experience?.userId !== userId) {
+      if (
+        comment.userId !== ctx.user.id &&
+        experience?.userId !== ctx.user.id
+      ) {
         throw new TRPCError({
           code: "FORBIDDEN",
           message: "You can only delete your own comments",
@@ -202,7 +206,7 @@ export const commentRouter = router({
       const existingLike = await db.query.commentLikesTable.findFirst({
         where: and(
           eq(commentLikesTable.commentId, input.id),
-          eq(commentLikesTable.userId, userId),
+          eq(commentLikesTable.userId, ctx.user.id),
         ),
       });
 
@@ -215,7 +219,7 @@ export const commentRouter = router({
 
       await db.insert(commentLikesTable).values({
         commentId: input.id,
-        userId: userId,
+        userId: ctx.user.id,
         createdAt: new Date().toISOString(),
       });
 
@@ -230,7 +234,7 @@ export const commentRouter = router({
         .where(
           and(
             eq(commentLikesTable.commentId, input.id),
-            eq(commentLikesTable.userId, userId),
+            eq(commentLikesTable.userId, ctx.user.id),
           ),
         );
 
