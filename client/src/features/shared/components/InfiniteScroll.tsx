@@ -17,7 +17,7 @@ export function InfiniteScroll({
     const observer = new IntersectionObserver(
       (entries) => {
         const target = entries[0];
-        if (target.isIntersecting && hasNextPage) {
+        if (target.isIntersecting) {
           onLoadMore();
         }
       },
