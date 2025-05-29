@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ComponentRef, useEffect, useRef, useState } from "react";
 
 import Input from "./Input";
 
@@ -7,7 +7,7 @@ export type FileInputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 export default function FileInput({ onChange, ...props }: FileInputProps) {
   const [preview, setPreview] = useState<string>();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<ComponentRef<"input">>(null);
 
   useEffect(() => {
     return () => {
@@ -58,14 +58,14 @@ export default function FileInput({ onChange, ...props }: FileInputProps) {
           <button
             type="button"
             onClick={handleClear}
-            className="absolute -right-2 -top-2 rounded-full bg-neutral-900 p-1 text-white hover:bg-neutral-700 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+            className="absolute p-1 text-white rounded-full -right-2 -top-2 bg-neutral-900 hover:bg-neutral-700 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
           >
-            <X className="h-3 w-3" />
+            <X className="w-3 h-3" />
           </button>
           <img
             src={preview}
             alt="Preview"
-            className="h-48 w-48 rounded-lg object-cover"
+            className="object-cover w-48 h-48 rounded-lg"
           />
         </div>
       )}
