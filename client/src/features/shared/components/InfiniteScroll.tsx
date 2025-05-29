@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { ComponentRef, useEffect, useRef } from "react";
 
 type InfiniteScrollProps = {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ export function InfiniteScroll({
   onLoadMore,
   threshold = 500,
 }: InfiniteScrollProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<ComponentRef<"div">>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
